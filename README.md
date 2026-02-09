@@ -1,4 +1,4 @@
-_DiamondRails (Updated Fork for Minecraft 1.21.11)
+# DiamondRails (Updated Fork for Minecraft 1.21.11)
 A Fabric mod that makes minecarts useful as late-game transportation by adding high-speed powered rails. This is a fork of arthomnix’s DiamondRails (original mod not updated past older Minecraft versions) and is now updated to work with Minecraft Fabric 1.21.11 and latest Fabric API.
 
 _All credit for the original code and assets (icons, models) goes to arthomnix. All code is freely usable under the MIT license._
