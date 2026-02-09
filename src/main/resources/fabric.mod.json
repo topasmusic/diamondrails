@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "diamondrails",
-	"version": "1.0.0",
+	"version": "${version}",
 	"name": "Diamond Rails",
 	"description": "A continuation of the Diamond Rails mod by arthomnix for 1.21",
 	"authors": [
@@ -22,8 +22,8 @@
 		"diamondrails.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.15.11",
-		"minecraft": "~1.21",
+		"fabricloader": ">=0.18.4",
+		"minecraft": "~1.21.11",
 		"java": ">=21",
 		"fabric-api": "*"
 	}

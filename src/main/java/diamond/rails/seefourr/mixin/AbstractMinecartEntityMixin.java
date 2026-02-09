@@ -1,67 +1,117 @@
 package diamond.rails.seefourr.mixin;
 
-import diamond.rails.seefourr.Diamondrails;
+import diamond.rails.seefourr.access.DiamondRailsSpeedAccessor;
 import diamond.rails.seefourr.block.ModBlocks;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractMinecartEntity.class)
-public abstract class AbstractMinecartEntityMixin extends Entity {
+public abstract class AbstractMinecartEntityMixin extends Entity implements DiamondRailsSpeedAccessor {
 	@Unique
-	private double maxSpeed = 8.0;
+	private double diamondrails$lastCustomMaxSpeed = -1.0;
+
+	@Shadow
+	public abstract BlockPos getRailOrMinecartPos();
 
 	public AbstractMinecartEntityMixin(EntityType<?> entityType, World world) {
 		super(entityType, world);
 	}
 
-	@Redirect(method = "moveOnRail", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isOf(Lnet/minecraft/block/Block;)Z"))
-	private boolean checkForNewPoweredRailTypes(BlockState state, Block block) {
-		return state.isIn(Diamondrails.TAG_POWERED_RAILS);
+	@Unique
+	private boolean diamondrails$hasPlayerPassenger() {
+		Entity passenger = this.getFirstPassenger();
+		return passenger instanceof PlayerEntity;
 	}
 
-	@Redirect(method = "moveOnRail", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Vec3d;add(DDD)Lnet/minecraft/util/math/Vec3d;", ordinal = 5))
-	private Vec3d increaseAccelForNewRails(Vec3d vec, double x, double y, double z) {
-		Vec3d newvec = vec.add(x, y, z);
-		BlockState blockState = this.getWorld().getBlockState(this.getBlockPos());
+	@Unique
+	@Override
+	public double diamondrails$getLastCustomMaxSpeed() {
+		return this.diamondrails$lastCustomMaxSpeed;
+	}
+
+	@Inject(method = "getMaxSpeed", at = @At("HEAD"), cancellable = true)
+	private void diamondrails$maxSpeed(ServerWorld world, CallbackInfoReturnable<Double> cir) {
+		BlockState blockState = world.getBlockState(this.getRailOrMinecartPos());
+		double speed;
 		if (blockState.isOf(ModBlocks.DIAMONDRAIL)) {
-			return newvec.multiply(40 / 8d);
+			speed = 32.0;
 		} else if (blockState.isOf(ModBlocks.ENHANCEDDIAMONDRAIL)) {
-			return newvec.multiply(80 / 8d);
+			speed = 90.0;
 		} else if (blockState.isOf(ModBlocks.NETHERITERAIL)) {
-			return newvec.multiply((159d + (2d/3d)) / 8d);
+			speed = 159.0;
+		} else {
+			if (!diamondrails$hasPlayerPassenger()) {
+				this.diamondrails$lastCustomMaxSpeed = -1.0;
+				return;
+			}
+			if (blockState.isOf(Blocks.POWERED_RAIL)) {
+				this.diamondrails$lastCustomMaxSpeed = 8.0;
+			}
+			if (this.diamondrails$lastCustomMaxSpeed <= 0.0) {
+				return;
+			}
+			double divisor = this.isTouchingWater() ? 40.0 : 20.0;
+			cir.setReturnValue(this.diamondrails$lastCustomMaxSpeed / divisor);
+			return;
 		}
-		return newvec;
+
+		this.diamondrails$lastCustomMaxSpeed = speed;
+		double divisor = this.isTouchingWater() ? 40.0 : 20.0;
+		cir.setReturnValue(speed / divisor);
 	}
 
-	@Redirect(method = "moveOnRail", at = @At(value = "INVOKE", target = "Ljava/lang/Math;min(DD)D"))
-	private double increaseSpeedCap(double a, double b) {
-		return Math.min(8.0, b);
-	}
-
-	@Redirect(method = "moveOnRail", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/vehicle/AbstractMinecartEntity;getMaxSpeed()D"))
-	public double increaseMaxSpeedOnNewRails(AbstractMinecartEntity instance) {
-		double speed = maxSpeed;
-		BlockState blockState = this.getWorld().getBlockState(this.getBlockPos());
-		if (blockState.isOf(Blocks.POWERED_RAIL)) {
-			speed = 8.0;
-		} else if (blockState.isOf(ModBlocks.DIAMONDRAIL)) {
-			speed = 40.0;
-		} else if (blockState.isOf(ModBlocks.ENHANCEDDIAMONDRAIL)) {
-			speed = 80.0;
-		} else if (blockState.isOf(ModBlocks.NETHERITERAIL)) {
-			speed = 159.0 + (2d/3d);
+	@Inject(method = "tick", at = @At("TAIL"))
+	private void diamondrails$forceRailSpeed(CallbackInfo ci) {
+		World world = this.getEntityWorld();
+		if (world.isClient()) {
+			return;
 		}
-		maxSpeed = speed;
-		return speed / (this.isTouchingWater() ? 40.0 : 20.0);
+
+		BlockState state = world.getBlockState(this.getRailOrMinecartPos());
+		double speed;
+		if (state.isOf(ModBlocks.DIAMONDRAIL)) {
+			speed = 32.0;
+		} else if (state.isOf(ModBlocks.ENHANCEDDIAMONDRAIL)) {
+			speed = 90.0;
+		} else if (state.isOf(ModBlocks.NETHERITERAIL)) {
+			speed = 159.0;
+		} else {
+			return;
+		}
+
+		if (state.contains(Properties.POWERED) && !state.get(Properties.POWERED)) {
+			return;
+		}
+
+		Vec3d velocity = this.getVelocity();
+		double horiz = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+		if (horiz < 1.0e-4) {
+			return;
+		}
+
+		double divisor = this.isTouchingWater() ? 40.0 : 20.0;
+		double target = speed / divisor;
+		if (horiz == target) {
+			return;
+		}
+
+		double scale = target / horiz;
+		this.setVelocity(velocity.x * scale, velocity.y, velocity.z * scale);
 	}
 }

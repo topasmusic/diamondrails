@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.7-SNAPSHOT'
+	id 'fabric-loom' version '1.14.10'
 	id 'maven-publish'
 }
 
@@ -8,6 +8,10 @@ group = project.maven_group
 
 base {
 	archivesName = project.archives_base_name
+}
+
+tasks.withType(AbstractArchiveTask).configureEach {
+	archiveVersion = "${project.mod_version}+${project.minecraft_version}"
 }
 
 repositories {

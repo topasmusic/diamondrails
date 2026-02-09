@@ -1,14 +1,8 @@
 {
     "type": "minecraft:smithing_transform",
-    "template": {
-        "item": "minecraft:lapis_block"
-    },
-    "base": {
-        "item": "diamondrails:diamond_rail"
-    },
-    "addition": {
-        "item": "minecraft:chorus_fruit"
-    },
+    "template": "minecraft:lapis_block",
+    "base": "diamondrails:diamond_rail",
+    "addition": "minecraft:chorus_fruit",
     "result": {
         "id": "diamondrails:enhanced_diamond_rail"
     }

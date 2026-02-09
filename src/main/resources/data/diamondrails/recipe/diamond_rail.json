@@ -6,15 +6,9 @@
     "DRD"
   ],
   "key": {
-    "D": {
-      "item": "minecraft:diamond"
-    },
-    "S": {
-      "item": "minecraft:stick"
-    },
-    "R": {
-      "item": "minecraft:redstone"
-    }
+    "D": "minecraft:diamond",
+    "S": "minecraft:stick",
+    "R": "minecraft:redstone"
   },
   "result": {
     "id": "diamondrails:diamond_rail",
