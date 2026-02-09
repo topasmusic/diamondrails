@@ -1,7 +1,7 @@
-_This mod is a continuation of [the mod of the same name by arthomnix](https://modrinth.com/mod/diamond-rails), source [here](https://github.com/arthomnix/diamondrails), which never updated from 1.19.2._
+_DiamondRails (Updated Fork for Minecraft 1.21.11)
+A Fabric mod that makes minecarts useful as late-game transportation by adding high-speed powered rails. This is a fork of arthomnix’s DiamondRails (original mod not updated past older Minecraft versions) and is now updated to work with Minecraft Fabric 1.21.11 and latest Fabric API.
 
 _All credit for the original code and assets (icons, models) goes to arthomnix. All code is freely usable under the MIT license._
-
 
 # Diamond Rails
 A mod that makes minecarts and rails viable as late-game transport, adding three new types of powered rails far faster than vanilla.
@@ -25,16 +25,3 @@ Crafted by upgrading an enhanced diamond rail with a netherite smithing upgrade 
   - Powered rails are also recommended for going uphill and downhill so you don't go flying off the track.
 - Ideally, tracks should be straight and flat.
 - The rails are actually not as expensive as you might think, as a couple diamond/enhanced diamond rails can give a minecart enough momentum for hundreds of blocks, or thousands for netherite rails.
-
-
-## Potential future additions
-- Copper rails; I did see [a mod](https://modrinth.com/mod/thecopperrail) which added copper rails with a "directional" function which could be interesting but I guess if you want that you can just get that mod yourself, it probably (untested) works with this mod
-- Possibly outright buff default vanilla rail speed
-- Uphill/downhill/corners on the mod's rails
-- _I also need to slightly fix up the code as I messed up in the naming of the mod. It should be seefourr.diamond.rails and not diamond.rails.seefourr, as this results in "diamond" appearing first in the mod's files instead of "seefourr". :(. But it doesn't affect gameplay so this will probably stay on the backburner for a while._
-
-
-## Notes on Minecart Experimental Changes
-I've seen the recent snapshot and the experimental minecart changes and I hope at least the improvements to minecart movement, derailing and of course the speed changes make it into the base game. I  do intend to do either or both of the following:
-- look through the experimental datapack and yoink their code in some way
-- make future iterations of the mod use Mojang's form of rail code if possible and then implement the current mod's features as is. If I can I will try and make the mod's speeds customisable via gamerule
