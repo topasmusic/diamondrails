@@ -1,0 +1,17 @@
+{
+	"required": true,
+	"package": "diamond.rails.seefourr.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"AbstractMinecartEntityMixin",
+		"DefaultMinecartControllerMixin",
+		"ExperimentalMinecartControllerMixin",
+		"MinecartControllerAccessor"
+	],
+	"client": [
+	],
+
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

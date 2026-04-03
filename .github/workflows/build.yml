@@ -19,6 +19,9 @@ jobs:
           - dir: 26.1
             java: "25"
             artifact: diamondrails-26.1-jars
+          - dir: 26.1.1
+            java: "25"
+            artifact: diamondrails-26.1.1-jars
 
     steps:
       - name: Checkout
