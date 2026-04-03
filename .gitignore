@@ -1,0 +1,15 @@
+# Gradle
+**/.gradle/
+**/build/
+
+# Fabric run dirs
+**/run/
+
+# IDE
+.vscode/
+**/.vscode/
+**/.idea/
+**/*.iml
+
+# Local Java output
+**/bin/

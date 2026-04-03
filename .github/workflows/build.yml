@@ -1,0 +1,47 @@
+name: Build
+
+on:
+  push:
+    branches: [ "1.21.x" ]
+  pull_request:
+    branches: [ "1.21.x" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - dir: 1.21.11
+            java: "21"
+            artifact: diamondrails-1.21.11-jars
+          - dir: 26.1
+            java: "25"
+            artifact: diamondrails-26.1-jars
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: ${{ matrix.java }}
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build
+        working-directory: ${{ matrix.dir }}
+        run: |
+          chmod +x ./gradlew
+          ./gradlew build
+
+      - name: Upload JARs
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.dir }}/build/libs/*.jar
+          if-no-files-found: error
