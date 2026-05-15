@@ -3,7 +3,8 @@ plugins {
 	id 'maven-publish'
 }
 
-version = project.mod_version
+def releaseVersion = "${project.mod_version}-mc${project.minecraft_version}"
+version = releaseVersion
 group = project.maven_group
 
 base {
@@ -11,7 +12,7 @@ base {
 }
 
 tasks.withType(AbstractArchiveTask).configureEach {
-	archiveVersion = "${project.mod_version}+${project.minecraft_version}"
+	archiveVersion = releaseVersion
 }
 
 repositories {

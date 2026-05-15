@@ -3,7 +3,8 @@ plugins {
 	id 'maven-publish'
 }
 
-version = project.mod_version
+def releaseVersion = "${project.mod_version}-mc${project.minecraft_version}"
+version = releaseVersion
 group = project.maven_group
 def modVersion = project.version.toString()
 
@@ -56,9 +57,9 @@ java {
 }
 
 def releaseArchivesBaseName = project.archives_base_name
-def releaseVersion = project.version.toString()
+def releaseVersionString = project.version.toString()
 def releaseMinecraftVersion = project.minecraft_version.toString()
-def releaseFileStem = "${releaseArchivesBaseName}-${releaseVersion}-mc${releaseMinecraftVersion}"
+def releaseFileStem = "${releaseArchivesBaseName}-${releaseVersionString}"
 
 tasks.named("jar").configure {
 	archiveBaseName = releaseFileStem

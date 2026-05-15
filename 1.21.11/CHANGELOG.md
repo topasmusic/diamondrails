@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.4-mc1.21.11] - 2026-05-15
+### Changed
+- Release metadata and artifact naming now include the target Minecraft version for clearer update detection.
+
 ## [1.4] - 2026-01-22
 ### Added
 - `NOTES.md` with project summary and key behavior notes.
