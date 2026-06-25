@@ -1,0 +1,113 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	id 'maven-publish'
+}
+
+def releaseVersion = "${project.mod_version}-mc${project.minecraft_version}"
+version = releaseVersion
+group = project.maven_group
+def modVersion = project.version.toString()
+
+base {
+	archivesName = project.archives_base_name
+}
+
+repositories {
+	mavenCentral()
+	maven {
+		url = 'https://maven.fabricmc.net/'
+	}
+}
+
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"diamondrails" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+processResources {
+	inputs.property "version", modVersion
+
+	filesMatching("fabric.mod.json") {
+		expand "version": modVersion
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 25
+}
+
+java {
+	toolchain.languageVersion = JavaLanguageVersion.of(25)
+	withSourcesJar()
+
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
+}
+
+def releaseArchivesBaseName = project.archives_base_name
+def releaseVersionString = project.version.toString()
+def releaseMinecraftVersion = project.minecraft_version.toString()
+def releaseFileStem = "${releaseArchivesBaseName}-${releaseVersionString}"
+
+tasks.named("jar").configure {
+	archiveBaseName = releaseFileStem
+	archiveVersion = ""
+}
+
+tasks.named("sourcesJar").configure {
+	archiveBaseName = releaseFileStem
+	archiveClassifier = "sources"
+	archiveVersion = ""
+}
+
+tasks.register("pruneOldBuildLibs") {
+	doLast {
+		def libsDir = layout.buildDirectory.dir("libs").get().asFile
+		if (!libsDir.exists()) {
+			return
+		}
+
+		def currentPrefix = releaseFileStem
+		def jarFiles = libsDir.listFiles()?.findAll { file ->
+			file.isFile() && file.name.startsWith("${releaseArchivesBaseName}-") && file.name.endsWith(".jar")
+		} ?: []
+
+		jarFiles.findAll { !it.name.startsWith(currentPrefix) }.each { file ->
+			if (!file.delete()) {
+				throw new GradleException("Could not delete old build artifact: ${file.name}")
+			}
+		}
+	}
+}
+
+tasks.named("build").configure {
+	finalizedBy(tasks.named("pruneOldBuildLibs"))
+}
+
+jar {
+	inputs.property "archivesName", project.base.archivesName
+	from("LICENSE") {
+		rename { "${it}_${inputs.properties.archivesName}" }
+	}
+}
+
+publishing {
+	publications {
+		create("mavenJava", MavenPublication) {
+			artifactId = project.archives_base_name
+			from components.java
+		}
+	}
+}
