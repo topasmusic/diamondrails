@@ -1,0 +1,27 @@
+{
+	"schemaVersion": 1,
+	"id": "diamondrails",
+	"version": "${version}",
+	"name": "Diamond Rails",
+	"description": "A continuation of the Diamond Rails mod by arthomnix for Minecraft 26.3",
+	"authors": [
+		"seefourr"
+	],
+	"license": "MIT",
+	"icon": "assets/diamondrails/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"diamond.rails.seefourr.Diamondrails"
+		]
+	},
+	"mixins": [
+		"diamondrails.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": ">=0.161.0+26.3"
+	}
+}

@@ -17,16 +17,26 @@ Baue zuerst belastbaren Repo- und Workflow-Kontext auf, damit Ports, Fixes und P
 
 ## Repo-Grundsaetze
 
-- Standard-Arbeitslinie ist `26.2`, ausser der User will explizit Legacy, Vergleich oder Rueckport.
-- `26.2`, `26.1.1` und `26.1` sind Mojang-Mappings-Linien.
+- Standard-Arbeitslinie ist `26.3`, ausser der User will explizit Legacy, Vergleich oder Rueckport.
+- `26.3`, `26.2`, `26.1.1` und `26.1` sind Mojang-Mappings-Linien.
 - `1.21.11` ist die Yarn-Mappings-Linie.
 - Niemals blind Code zwischen `26.2` und `1.21.11` uebernehmen.
 - Verhalten portieren, aber APIs, Methodennamen, Typen und Imports pro Linie sauber anpassen.
-- `26.1.1` bleibt die letzte veroeffentlichte moderne Referenzlinie.
+- `26.2` ist die vorherige veroeffentlichte moderne Referenzlinie.
 
 ## Aktuell wichtige Versionsfakten
 
-Stand dieser Datei: `2026-06-25`
+Stand dieser Datei: `2026-10-04`
+
+- `26.3`
+  - Minecraft `26.3`
+  - Java `25`
+  - Fabric Loader `0.19.5`
+  - Fabric API `0.161.0+26.3`
+  - Loom `1.17.21`
+  - Gradle `9.6.0`
+  - offizielle Mojang-Namen
+  - Gameplay unveraendert gegenueber `26.2`; User bestaetigte bestandenen Ingame-Test am 2026-10-04
 
 - `26.2`
   - Minecraft `26.2`
@@ -83,6 +93,7 @@ Stand dieser Datei: `2026-06-25`
   - `v1.4-mc26.1`
   - `v1.4-mc26.1.1`
   - daraus fuer die neue Linie: `v1.4-mc26.2`
+  - fuer `26.3`: `v1.4-mc26.3`
 
 ## Arbeitsweise fuer Aenderungen
 

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "D D",
+    "DSD",
+    "DRD"
+  ],
+  "key": {
+    "D": "minecraft:diamond",
+    "S": "minecraft:stick",
+    "R": "minecraft:redstone"
+  },
+  "result": {
+    "id": "diamondrails:diamond_rail",
+    "count": 6
+  }
+}
